@@ -1,11 +1,5 @@
-// assume this data came from the database
-var notes = [
-    "This is the first note I've taken!",
-    "Now is the time for all good men to come to the aid of their country.",
-    "The quick brown fox jumped over the moon."
-];
-
 var notesManagerModule = (function () {
+    var notes;
     function loadData(notesData) {
         notes = [...notesData];
     }
@@ -111,7 +105,7 @@ var notesManagerModule = (function () {
         $notes,
         $newNote,
         $addNote,
-        help,
+        $help,
         publicApi = {
             loadData,
             init
@@ -120,7 +114,11 @@ var notesManagerModule = (function () {
     return publicApi
 })();
 
-notesManagerModule.loadData(notes);
+notesManagerModule.loadData([
+    "This is the first note I've taken!",
+    "Now is the time for all good men to come to the aid of their country.",
+    "The quick brown fox jumped over the moon."
+]);
 
 $(document).ready(function () {
     notesManagerModule.init({ notes: '#notes', new_note: '#note', add_note: '#add_note', help: '#open_help' });
