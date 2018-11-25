@@ -94,7 +94,33 @@ function ex6() {
 
 
 function ex7() {
-    var module = (function () {
+
+    // Module iife creator Util function
+    function define(name, fn) {
+        this[name] = (fn())
+    }
+
+
+    // var module = (function () {
+    //     var obj = {
+    //         a: 1,
+    //         b: 2
+    //     }
+
+    //     return {
+    //         getA: function () {
+    //             return `A is ${obj.a}`
+    //         },
+    //         getB: function () {
+    //             return `B is ${obj.b}`
+    //         }
+    //     }
+
+    // }());
+    // Object.freeze(module);
+    // console.log(module.getA())
+
+    define('moduleP', function () {
         var obj = {
             a: 1,
             b: 2
@@ -102,16 +128,16 @@ function ex7() {
 
         return {
             getA: function () {
-                return `A is ${obj.a}`
+                return `A - ${obj.a}`
             },
             getB: function () {
-                return `B is ${obj.b}`
+                return `B - ${obj.b}`
             }
         }
 
-    }());
-    Object.freeze(module);
-    console.log(module.getA())
+    })
+
+    console.log(moduleP.getA());
 }
 
 
