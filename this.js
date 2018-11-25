@@ -2,9 +2,9 @@
     Eyeballing This
     You'll notice that none of these rules require too much work.
 
-    1.Is there a dot? Look to the left. That's this.
-    2.Do you see .call() or .apply()? What's passed in before the first comma? Thats this.
-    3.Does the function stand alone when it's invoked? Then what's your global context? That's this.
+    1.Implicit binding: Is there a dot? Look to the left/containing object. That object is this scope.
+    2.Explicit binding: Do you see .call() or .apply()? What's passed in before the first comma? Thats this.
+    3.Default rule: Does the function stand alone when it's invoked? Then what's your global context? That's this.
     4.If we use new for creting an object, it will just return its this scope
     
     These three rules-of-thumb point to the most important rule of all: this refers to a function's callsite (where it is invoked).
