@@ -6,7 +6,6 @@
 
 function Foo(who) {
     this.me = who;
-    this.abc
 }
 
 Foo.prototype.identify = function () {
