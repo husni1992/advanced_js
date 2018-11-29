@@ -6,6 +6,7 @@
 
 function Foo(who) {
     this.me = who;
+    this.abc
 }
 
 Foo.prototype.identify = function () {
@@ -16,9 +17,20 @@ var a1 = new Foo('a1');
 var a2 = new Foo('a2');
 
 a2.speak = function () {
-    alert('Hello, ' + this.identify() + '.')
+    console.info('Hello, ' + this.identify() + '.')
 }
 
-debugger
-
 a2.speak();
+
+
+a1.constructor === Foo; // true
+a1.constructor === a2.constructor; // true
+a1.__proto__ === Foo.prototype; // true
+a1.__proto__ === a2.__proto__; // true
+
+// my own comparisons
+a1.__proto__ === Object.getPrototypeOf(a1) // true
+Foo.prototype.constructor === Foo.constructor // false
+Foo.prototype.constructor === Foo // true
+a1.constructor === Foo.prototype.constructor // true
+a1.constructor === Foo.constructor // false
