@@ -15,12 +15,15 @@ Foo.prototype.identify = function () {
 var a1 = new Foo('a1');
 var a2 = new Foo('a2');
 
+a1.identify = function () { // <<-- Shadowing: mirorring the Foo.prototype.identify and making a copy   
+    console.info('Hello, ' + Foo.prototype.identify.call(this) + '.')
+}
+a1.identify();
+
 a2.speak = function () {
     console.info('Hello, ' + this.identify() + '.')
 }
-
 a2.speak();
-
 
 a1.constructor === Foo; // true
 a1.constructor === a2.constructor; // true
@@ -33,3 +36,25 @@ Foo.prototype.constructor === Foo.constructor // false
 Foo.prototype.constructor === Foo // true
 a1.constructor === Foo.prototype.constructor // true
 a1.constructor === Foo.constructor // false
+
+
+
+// ex2
+
+function Bar(who) {
+    if (arguments.length) {
+        Foo.call(this, who);
+    }
+}
+
+Bar.prototype = Object.create(Foo.prototype)
+
+Bar.prototype.speak = function () {
+    console.log('Hello', this.identify() + '.')
+}
+
+var b1 = new Bar('b1')
+var b2 = new Bar('b2')
+
+b1.speak();
+b2.speak()
