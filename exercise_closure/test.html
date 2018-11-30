@@ -1,33 +1,39 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Exercise 2</title>
-<link rel="stylesheet" href="test.css">
+	<title>Exercise 2</title>
+	<link rel="stylesheet" href="test.css">
 </head>
+
 <body>
 
-<h1>Exercise 2</h1>
+	<h1>Exercise 2</h1>
 
-<div id="help">
+	<div id="help">
+		<p>
+			<strong>Instructions:</strong> Add notes to the list by typing into the text box and clicking "Add".
+		</p>
+		<p>
+			Ex:
+			<a class="note" href="#">Some notes taken</a>
+		</p>
+	</div>
+
 	<p>
-		<strong>Instructions:</strong> Add notes to the list by typing into the text box and clicking "Add".
+		<input id="open_help" type="button" value="Help">
+		<input id="go_top" type="button" value="Go top">
 	</p>
+
 	<p>
-		Ex:
-		<a class="note" href="#">Some notes taken</a>
+		<input id="note" size="75" autofocus> <input id="add_note" type="button" value="Add">
 	</p>
-</div>
 
-<p>
-	<input id="open_help" type="button" value="Help">
-</p>
+	<div id="notes"></div>
 
-<input id="note" size="75"> <input id="add_note" type="button" value="Add">
-
-<div id="notes"></div>
-
-<script src="jquery.js"></script>
-<script src="test.js"></script>
+	<script src="jquery.js"></script>
+	<script src="test.js"></script>
 
 </body>
+
 </html>
