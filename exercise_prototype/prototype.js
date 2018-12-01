@@ -1,152 +1,146 @@
-var notesManagerModule = (function () {
-    var notes;
-    function loadData(notesData) {
-        notes = [...notesData];
+function NotesManager(opts) {
+    this.$notes = $(opts.notes);
+    this.$newNote = $(opts.new_note);
+    this.$openHelp = $(opts.open_help);
+    this.$help = $(opts.help);
+    this.$addNote = $(opts.add_note);
+    this.$goTop = $(opts.goTop);
+
+    this.init = this.init;
+    this.loadData = this.loadData
+}
+
+NotesManager.prototype.loadData = function (notesData) {
+    this.notes = [...notesData];
+}
+
+NotesManager.prototype.init = function () {
+    // build the initial list from the existing `notes` data
+    var html = "";
+    for (let i = 0; i < this.notes.length; i++) {
+        let numbOfItem = i + 1;
+        html += `<a id='${numbOfItem}' href='#' class='note'>` + `${numbOfItem}) ` + this.notes[i] + "</a>";
     }
+    this.$notes.html(html);
 
-    function addNote(note, numb) {
-        $notes.append(
-            $(`<a id="${numb}" href='#'></a>`)
-                .addClass("note")
-                .text(`${numb}) ${note}`)
-        );
-        $notes.animate({
-            scrollTop: $(`#${numb}`).offset().top
-        }, 0);
-    }
+    // listen to "help" button
+    this.$openHelp.bind("click", this.handleOpenHelp.bind(this));
 
-    function addCurrentNote() {
-        var current_note = $newNote.val();
+    // listen to "Go top" button
+    this.$goTop.bind("click", this.handleGoTop.bind(this));
 
-        if (current_note) {
-            notes.push(current_note);
-            addNote(current_note, notes.length);
-            $newNote.val("");
+    // listen to "add" button
+    this.$addNote.bind("click", this.handleAddNote.bind(this));
+
+    // listen for <enter> in text box
+    this.$newNote.bind("keypress", this.handleEnter.bind(this));
+
+    // listen for clicks outside the notes box
+    $(document).bind("click", this.handleDocumentClick.bind(this));
+
+    // listen for clicks on note elements
+    this.$notes.on("click", ".note", this.handleNoteClick.bind(this));
+
+    document.onkeyup = function (e) {
+        // press ctrl + i to scroll to top of the list
+        if (e.ctrlKey && e.which == 73) {
+            this.handleGoTop();
+            e.preventDefault();
+            e.stopPropagation()
         }
+    }.bind(this);
+}
+
+
+NotesManager.prototype.addNote = function (note, numb) {
+    this.$notes.append(
+        $(`<a id="${numb}" href='#'></a>`)
+            .addClass("note")
+            .text(`${numb}) ${note}`)
+    );
+    this.$notes.animate({
+        scrollTop: $(`#${numb}`).offset().top
+    }, 0);
+}
+
+NotesManager.prototype.addCurrentNote = function () {
+    var current_note = this.$newNote.val();
+
+    if (current_note) {
+        this.notes.push(current_note);
+        this.addNote(current_note, this.notes.length);
+        this.$newNote.val("");
     }
+}
 
-    function showHelp() {
-        $help.show();
+NotesManager.prototype.showHelp = function () {
+    this.$help.show();
 
-        document.addEventListener("click", function __handler__(evt) {
-            evt.preventDefault();
-            evt.stopPropagation();
-            evt.stopImmediatePropagation();
-
-            document.removeEventListener("click", __handler__, true);
-            hideHelp();
-        }, true);
-    }
-
-    function hideHelp() {
-        $help.hide();
-    }
-
-    function handleOpenHelp(evt) {
-        if (!$help.is(":visible")) {
-            evt.preventDefault();
-            evt.stopPropagation();
-
-            showHelp();
-        }
-    }
-
-    function handleGoTop() {
-        $notes.animate({
-            scrollTop: $(`#1`).offset().top
-        }, 0);
-    }
-
-    function handleAddNote(evt) {
-        addCurrentNote();
-    }
-
-    function handleEnter(evt) {
-        if (evt.which == 13) {
-            addCurrentNote();
-        }
-    }
-
-    function handleDocumentClick(evt) {
-        $notes.removeClass("active");
-        $notes.children(".note").removeClass("highlighted");
-    }
-
-    function handleNoteClick(evt) {
+    var listerWithHardBind;
+    var hideHelpListener = function __handler__(evt) {
         evt.preventDefault();
         evt.stopPropagation();
+        evt.stopImmediatePropagation();
 
-        $notes.addClass("active");
-        $notes.children(".note").removeClass("highlighted");
-        $(evt.target).addClass("highlighted");
+        document.removeEventListener("click", listerWithHardBind);
+        this.hideHelp();
     }
 
-    function init(opts) {
-        $notes = $(opts.notes);
-        $newNote = $(opts.new_note);
-        $openHelp = $(opts.open_help);
-        $help = $(opts.help);
-        $addNote = $(opts.add_note);
-        $goTop = $(opts.goTop);
+    listerWithHardBind = hideHelpListener.bind(this);
+    document.addEventListener("click", listerWithHardBind);
+}
 
-        // build the initial list from the existing `notes` data
-        var html = "";
-        for (i = 0; i < notes.length; i++) {
-            let numbOfItem = i + 1;
-            html += `<a id='${numbOfItem}' href='#' class='note'>` + `${numbOfItem}) ` + notes[i] + "</a>";
-        }
-        $notes.html(html);
+NotesManager.prototype.hideHelp = function () {
+    this.$help.hide();
+}
 
-        // listen to "help" button
-        $openHelp.bind("click", handleOpenHelp);
-
-        // listen to "Go top" button
-        $goTop.bind("click", handleGoTop);
-
-        // listen to "add" button
-        $addNote.bind("click", handleAddNote);
-
-        // listen for <enter> in text box
-        $newNote.bind("keypress", handleEnter);
-
-        // listen for clicks outside the notes box
-        $(document).bind("click", handleDocumentClick);
-
-        // listen for clicks on note elements
-        $notes.on("click", ".note", handleNoteClick);
-
-        document.onkeyup = function (e) {
-            console.log(e.which)
-            if (e.ctrlKey && e.which == 73) {
-                handleGoTop();
-                e.preventDefault();
-                e.stopPropagation()
-            }
-        };
+NotesManager.prototype.handleOpenHelp = function (evt) {
+    if (!this.$help.is(":visible")) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        this.showHelp();
     }
+}
 
-    var notes = [],
-        $notes,
-        $newNote,
-        $addNote,
-        $openHelp,
-        $help,
-        $goTop,
-        publicApi = {
-            loadData,
-            init
-        }
+NotesManager.prototype.handleGoTop = function () {
+    this.$notes.animate({
+        scrollTop: $(`#1`).offset().top
+    }, 0);
+}
 
-    return publicApi
-})();
+NotesManager.prototype.handleAddNote = function (evt) {
+    this.addCurrentNote();
+}
 
-notesManagerModule.loadData([
+NotesManager.prototype.handleEnter = function (evt) {
+    if (evt.which == 13) {
+        this.addCurrentNote();
+    }
+}
+
+NotesManager.prototype.handleDocumentClick = function (evt) {
+    this.$notes.removeClass("active");
+    this.$notes.children(".note").removeClass("highlighted");
+}
+
+NotesManager.prototype.handleNoteClick = function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+
+    this.$notes.addClass("active");
+    this.$notes.children(".note").removeClass("highlighted");
+    $(evt.target).addClass("highlighted");
+}
+
+var fetchedNotesFromDb = [
     "FIRST",
     "This is the first note I've taken!",
     "Now is the time for all good men to come to the aid of their country.",
     "The quick brown fox jumped over the moon."
-]);
+]
 
-$(document).ready(function () {
-    notesManagerModule.init({ notes: '#notes', new_note: '#note', add_note: '#add_note', open_help: '#open_help', help: '#help', goTop: '#go_top' });
-});
+var myNotes = new NotesManager({ notes: '#notes', new_note: '#note', add_note: '#add_note', open_help: '#open_help', help: '#help', goTop: '#go_top' });
+myNotes.loadData(fetchedNotesFromDb);
+myNotes.init();
+
+console.log(myNotes);
