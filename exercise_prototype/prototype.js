@@ -1,7 +1,3 @@
-function NotesManager(){
-    //..
-}
-
 var notesManagerModule = (function () {
     var notes;
     function loadData(notesData) {
