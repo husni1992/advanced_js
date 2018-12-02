@@ -1,10 +1,5 @@
 function NotesManager(opts) {
-    this.$notes = $(opts.notes);
-    this.$newNote = $(opts.new_note);
-    this.$openHelp = $(opts.open_help);
-    this.$help = $(opts.help);
-    this.$addNote = $(opts.add_note);
-    this.$goTop = $(opts.goTop);
+    this.notes = [];
 
     this.init = this.init;
     this.loadData = this.loadData
@@ -14,7 +9,14 @@ NotesManager.prototype.loadData = function (notesData) {
     this.notes = [...notesData];
 }
 
-NotesManager.prototype.init = function () {
+NotesManager.prototype.init = function (opts) {
+    this.$notes = $(opts.notes);
+    this.$newNote = $(opts.new_note);
+    this.$openHelp = $(opts.open_help);
+    this.$help = $(opts.help);
+    this.$addNote = $(opts.add_note);
+    this.$goTop = $(opts.goTop);
+
     // build the initial list from the existing `notes` data
     var html = "";
     for (let i = 0; i < this.notes.length; i++) {
@@ -73,10 +75,11 @@ NotesManager.prototype.addCurrentNote = function () {
     }
 }
 
+// Proper way of using hard binding mechanism.
 NotesManager.prototype.showHelp = function () {
-    this.$help.show();
-
     var listerWithHardBind;
+
+    this.$help.show();
     var hideHelpListener = function __handler__(evt) {
         evt.preventDefault();
         evt.stopPropagation();
@@ -89,6 +92,21 @@ NotesManager.prototype.showHelp = function () {
     listerWithHardBind = hideHelpListener.bind(this);
     document.addEventListener("click", listerWithHardBind);
 }
+
+// Easy way of assigning this to self as 'var self = this'.
+// NotesManager.prototype.showHelp = function () {
+//     var self = this;
+
+//     self.$help.show();
+//     document.addEventListener("click", function __handler__(evt) {
+//         evt.preventDefault();
+//         evt.stopPropagation();
+//         evt.stopImmediatePropagation();
+
+//         document.removeEventListener("click", __handler__, true);
+//         self.hideHelp();
+//     }, true);
+// }
 
 NotesManager.prototype.hideHelp = function () {
     this.$help.hide();
@@ -132,15 +150,14 @@ NotesManager.prototype.handleNoteClick = function (evt) {
     $(evt.target).addClass("highlighted");
 }
 
-var fetchedNotesFromDb = [
+var myNotes = new NotesManager();
+myNotes.loadData([
     "FIRST",
     "This is the first note I've taken!",
     "Now is the time for all good men to come to the aid of their country.",
     "The quick brown fox jumped over the moon."
-]
+]);
 
-var myNotes = new NotesManager({ notes: '#notes', new_note: '#note', add_note: '#add_note', open_help: '#open_help', help: '#help', goTop: '#go_top' });
-myNotes.loadData(fetchedNotesFromDb);
-myNotes.init();
-
-console.log(myNotes);
+$(document).ready(function () {
+    myNotes.init({ notes: '#notes', new_note: '#note', add_note: '#add_note', open_help: '#open_help', help: '#help', goTop: '#go_top' });
+});
