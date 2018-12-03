@@ -24,7 +24,13 @@ function Button(width, height, label) {
 
 Button.prototype = Object.create(Widget.prototype);
 
-Button.prototype.onClick = function (action) {
+// Below will be controlling parent's render inside this function
+Button.prototype.render = function ($where) {
+	Widget.prototype.render.call(this, $where);
+	console.log(`Rendered ${this.label}`);
+}
+
+Button.prototype.setOnClick = function (action) {
 	this.$elem.bind('click', action.bind(this))
 }
 
@@ -32,12 +38,12 @@ $(document).ready(function () {
 	var $body = $(document.body);
 	var btn1 = new Button(150, 40, 'Hello');
 	var btn2 = new Button(150, 60, 'World');
-	btn1.onClick(function (evt) {
+	btn1.setOnClick(function (evt) {
 		alert(`${this.label}`);
 	});
 	btn1.render($body);
 
-	btn2.onClick(function (evt) {
+	btn2.setOnClick(function (evt) {
 		alert(`${this.label}`);
 	});
 	btn2.render($body);
