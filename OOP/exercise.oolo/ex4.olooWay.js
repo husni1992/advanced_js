@@ -23,7 +23,7 @@ Button.setup = function (width, height, label) {
 	this.$elem = $("<button>").text(this.label);
 };
 
-Button.onClick = function (action) {
+Button.setOnClick = function (action) {
 	// this.$elem.bind('clicked', action.bind(this))
 	this.$elem.click(action.bind(this))
 }
@@ -37,16 +37,16 @@ $(document).ready(function () {
 
 	var btn1 = Object.create(Button);
 	btn1.setup(150, 40, 'Button1');
-	btn1.onClick(function (evt) {
+	btn1.setOnClick(function (evt) {
 		console.log(`Clicked ${this.label}`);
 	});
 
 	var btn2 = Object.create(Button);
 	btn2.setup(150, 40, 'Button2');
-	btn2.onClick(function (evt) {
+	btn2.setOnClick(function (evt) {
 		console.log(`Clicked ${this.label}`);
 	});
 
-	btn1.build($body);
-	btn2.build($body);
+	btn1.insert($body);
+	btn2.insert($body);
 });
