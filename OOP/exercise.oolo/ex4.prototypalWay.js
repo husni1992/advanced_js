@@ -47,5 +47,7 @@ $(document).ready(function () {
 		alert(`${this.label}`);
 	});
 	btn2.render($body);
+
+	$("#heading").text('Exercise 4 - Inheritance using prorotypal inheritance way.');
 });
 

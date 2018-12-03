@@ -1,0 +1,1 @@
+This exercise is to convert broken code (test-unfixed.js) of a simple notes manager, being changed to a modularized iife notes manager module.

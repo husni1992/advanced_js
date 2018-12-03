@@ -49,4 +49,6 @@ $(document).ready(function () {
 
 	btn1.insert($body);
 	btn2.insert($body);
+
+	$("#heading").text('Exercise 4 - Inheritance using OLOO way');
 });
